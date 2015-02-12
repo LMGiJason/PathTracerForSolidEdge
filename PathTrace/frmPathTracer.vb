@@ -49,6 +49,7 @@ Public Class frmPathTrace
             Dim precision As Integer = 1
             Dim limit, range, inc As Double
             btnProcess.Enabled = False
+            preciseTrackBar.Enabled = False
 
             If txtLimit.TextLength > 0 Then
                 limit = Double.Parse(txtLimit.Text)
@@ -84,6 +85,7 @@ Public Class frmPathTrace
                 End If
             End If
             btnProcess.Enabled = True
+            preciseTrackBar.Enabled = True
             preciseTrackBar.Initialize(mInitialValue, limit)
             lblStatus.Text = mInitialStringValue & " to " & txtLimit.Text
 
@@ -106,7 +108,7 @@ Public Class frmPathTrace
         lblStatus.Text = e.Msg
     End Sub
 
-    Private Sub preciseTrackBar_FloatValueChanged(sender As Object, e As FloatValuesEventArg) Handles preciseTrackBar.FloatValueChanged
+    Private Sub preciseTrackBar_FloatValueChanged(sender As Object, e As FloatValuesEventArg)
         mProcessor.SetVarValFromString(e.FloatVal)
     End Sub
 
