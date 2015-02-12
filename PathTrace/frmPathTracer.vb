@@ -108,7 +108,7 @@ Public Class frmPathTrace
         lblStatus.Text = e.Msg
     End Sub
 
-    Private Sub preciseTrackBar_FloatValueChanged(sender As Object, e As FloatValuesEventArg)
+    Private Sub preciseTrackBar_FloatValueChanged(sender As Object, e As FloatValuesEventArg) Handles preciseTrackBar.FloatValueChanged
         mProcessor.SetVarValFromString(e.FloatVal)
     End Sub
 
