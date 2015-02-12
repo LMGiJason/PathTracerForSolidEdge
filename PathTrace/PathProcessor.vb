@@ -154,6 +154,7 @@ Public Class PathProcessor
 
             AddPathPoint()
             CreateCurves()
+            ReportStatus("Done")
             Return True
         Catch ex As Exception
             ReportStatus(ex.Message)
@@ -188,16 +189,20 @@ Public Class PathProcessor
 
         Dim ct As Integer
         For r As Integer = 1 To mPoints.Count
-            Dim pt As SolidEdgeFrameworkSupport.Point2d = mPoints.Item(r)
             Dim trace = mPathPointLists(r - 1)
-            ct = CInt(trace.PathPoints.Count / 2)
-            mBspline = mBsplines.AddByPoints(4, ct, trace.PathPoints.ToArray())
-            pointStyle = pt.Style
-            curveStyle = mBspline.Style
-            curveStyle.LinearColor = pointStyle.LinearColor
-            ReleaseRCW(pt)
-            ReleaseRCW(pointStyle)
-            ReleaseRCW(curveStyle)
+            'If the point did not move location we will only have one set of coords. 
+            'Not enough to create a curve
+            If trace.PathPoints.Count > 2 Then
+                Dim pt As SolidEdgeFrameworkSupport.Point2d = mPoints.Item(r)
+                ct = CInt(trace.PathPoints.Count / 2)
+                mBspline = mBsplines.AddByPoints(4, ct, trace.PathPoints.ToArray())
+                pointStyle = pt.Style
+                curveStyle = mBspline.Style
+                curveStyle.LinearColor = pointStyle.LinearColor
+                ReleaseRCW(pt)
+                ReleaseRCW(pointStyle)
+                ReleaseRCW(curveStyle)
+            End If
         Next
 
     End Sub

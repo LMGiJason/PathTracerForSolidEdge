@@ -146,7 +146,7 @@ Partial Class frmPathTrace
         Me.KeyPreview = True
         Me.Location = Global.PathTrace.My.MySettings.Default.FormPosition
         Me.Name = "frmPathTrace"
-        Me.Text = "Solid Edge Path Tracer"
+        Me.Text = "Path Tracer for Solid Edge "
         Me.TopMost = True
         Me.statusStrip1.ResumeLayout(False)
         Me.statusStrip1.PerformLayout()
