@@ -1,4 +1,9 @@
-﻿
+﻿'Written by Jason Titcomb while working for LMGi www.tlmgi.com
+'This code is provided AS IS and is not meant to be a reference of any kind.
+''' <summary>
+''' Just an implementation of a TrackBar that returns a floating point value of a range
+''' </summary>
+''' <remarks></remarks>
 Public Class PreciseTrackBar
     Inherits TrackBar
     Public Event FloatValueChanged(sender As Object, e As FloatValuesEventArg)

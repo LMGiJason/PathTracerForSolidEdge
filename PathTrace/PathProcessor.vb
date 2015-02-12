@@ -1,4 +1,7 @@
-﻿Imports SolidEdgeFramework
+﻿'Written by Jason Titcomb while working for LMGi www.tlmgi.com
+'This code is provided AS IS and is not meant to be a reference of any kind.
+'Portions of this code have been derived from work by Jason Newell(http://www.jasonnewell.net) and the Solid Edge SDK
+Imports SolidEdgeFramework
 Imports System.Runtime.InteropServices
 Imports SolidEdgeFrameworkSupport
 Imports SolidEdgeConstants.UnitTypeConstants
@@ -17,6 +20,10 @@ Public Class MsgEventArg
     Property Msg As String
 End Class
 
+''' <summary>
+''' Does all the work of connection to Solid Edge and creating the curves
+''' </summary>
+''' <remarks></remarks>
 Public Class PathProcessor
     Implements ISECommandEvents
 
@@ -127,7 +134,7 @@ Public Class PathProcessor
 
             tmr.Start()
             Do
-                If tmr.ElapsedMilliseconds > 10000 Then '10 seconds max
+                If tmr.ElapsedMilliseconds > 10000 Then '10 seconds max so the user won,t get mad
                     ReportStatus("Too many iterations")
                     Return False
                 End If
@@ -163,7 +170,7 @@ Public Class PathProcessor
             Dim trace = mPathPointLists(r - 1)
             Dim tpc = trace.PathPoints.Count
             If tpc > 1 Then
-                'Only if the new point is not close to the last point
+                'Only if the new point is not too close to the last point. Makes for a bad curve
                 If Math.Abs(trace.PathPoints(tpc - 1) - pt.y) > 0.001 Then
                     If Math.Abs(trace.PathPoints(tpc - 2) - pt.x) > 0.001 Then
                         trace.PathPoints.Add(pt.x)
@@ -253,6 +260,12 @@ Public Class PathProcessor
             o = Nothing
         End If
     End Sub
+
+
+    ''' <summary>
+    ''' We just want the program to behave like any other Solid Edge command so we have all this code below
+    ''' </summary>
+    ''' <remarks></remarks>
 #Region "Command Events"
 
     Public Sub Activate() Implements ISECommandEvents.Activate
@@ -277,7 +290,6 @@ Public Class PathProcessor
     Public Sub Terminate() Implements ISECommandEvents.Terminate
         System.Windows.Forms.Application.Exit()
     End Sub
-
 
     Private Command_CP As IConnectionPoint
     Private Command_CP_Cookie As Integer

@@ -1,4 +1,5 @@
-﻿
+﻿'Written by Jason Titcomb while working for LMGi www.tlmgi.com
+'This code is provided AS IS and is not meant to be a reference of any kind.
 Public Class frmPathTrace
     Private WithEvents mProcessor As New PathProcessor
     Private mInitialStringValue As String

@@ -2,7 +2,6 @@
 Imports System.Runtime.InteropServices
 Imports System.Threading
 
-
 ''' <summary>
 ''' Class that implements the OLE IMessageFilter interface.
 ''' </summary>
