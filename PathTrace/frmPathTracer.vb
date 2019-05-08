@@ -64,7 +64,7 @@ Public Class frmPathTrace
             End If
 
             If txtIncrement.TextLength > 0 Then
-                inc = Integer.Parse(txtIncrement.Text)
+                inc = Double.Parse(txtIncrement.Text)
             Else
                 lblStatus.Text = "Increment is required."
                 Exit Sub
