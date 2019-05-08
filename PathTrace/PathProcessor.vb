@@ -104,7 +104,7 @@ Public Class PathProcessor
         Dim inc As Double
         Dim max As Double
         Dim start As Double
-        Dim cur As Double = start
+        Dim cur As Double
         Dim tmr As New Stopwatch
         Dim pt As SolidEdgeFrameworkSupport.Point2d = Nothing
         Try
@@ -116,7 +116,7 @@ Public Class PathProcessor
             inc = CDbl(mUOM.ParseUnit(mUnitType, incStr))
             max = CDbl(mUOM.ParseUnit(mUnitType, maxStr))
             start = mVar.value
-
+            cur = start
             If mPoints.Count = 0 Then
                 ReportStatus("No points found to track")
                 Return False
@@ -134,7 +134,7 @@ Public Class PathProcessor
 
             tmr.Start()
             Do
-                If tmr.ElapsedMilliseconds > 10000 Then '10 seconds max so the user won,t get mad
+                If tmr.ElapsedMilliseconds > 60000 Then '60 seconds max so the user won,t get mad
                     ReportStatus("Too many iterations")
                     Return False
                 End If
@@ -152,7 +152,7 @@ Public Class PathProcessor
             Loop
             mVar.Value = max
 
-            AddPathPoint()
+            'AddPathPoint()
             CreateCurves()
             ReportStatus("Done")
             Return True
@@ -172,11 +172,10 @@ Public Class PathProcessor
             Dim tpc = trace.PathPoints.Count
             If tpc > 1 Then
                 'Only if the new point is not too close to the last point. Makes for a bad curve
-                If Math.Abs(trace.PathPoints(tpc - 1) - pt.y) > 0.001 Then
-                    If Math.Abs(trace.PathPoints(tpc - 2) - pt.x) > 0.001 Then
-                        trace.PathPoints.Add(pt.x)
-                        trace.PathPoints.Add(pt.y)
-                    End If
+                Dim dist2D As Double = Distance2D(trace.PathPoints(tpc - 2), pt.x, trace.PathPoints(tpc - 1), pt.y)
+                If dist2D > 0.0001 Then
+                    trace.PathPoints.Add(pt.x)
+                    trace.PathPoints.Add(pt.y)
                 End If
             End If
             ReleaseRCW(pt)
@@ -186,26 +185,37 @@ Public Class PathProcessor
     Private Sub CreateCurves()
         Dim pointStyle As SolidEdgeFrameworkSupport.GeometryStyle2d = Nothing
         Dim curveStyle As SolidEdgeFrameworkSupport.GeometryStyle2d = Nothing
-
+        Dim pointTrace As PathPointList = Nothing
         Dim ct As Integer
         For r As Integer = 1 To mPoints.Count
-            Dim trace = mPathPointLists(r - 1)
+            pointTrace = mPathPointLists(r - 1)
             'If the point did not move location we will only have one set of coords. 
             'Not enough to create a curve
-            If trace.PathPoints.Count > 2 Then
+            If pointTrace.PathPoints.Count > 2 Then
                 Dim pt As SolidEdgeFrameworkSupport.Point2d = mPoints.Item(r)
-                ct = CInt(trace.PathPoints.Count / 2)
-                mBspline = mBsplines.AddByPoints(4, ct, trace.PathPoints.ToArray())
+                ct = CInt(pointTrace.PathPoints.Count / 2)
+                mBspline = mBsplines.AddByPoints(4, ct, pointTrace.PathPoints.ToArray())
+                'If Distance2D(pointTrace.PathPoints(0), pointTrace.PathPoints(1), pointTrace.PathPoints(ct * 2 - 2), pointTrace.PathPoints(ct * 2 - 1)) < 0.0001 Then
+                '    mBspline.IsTangentiallyClosedCurve = True
+                'End If
                 pointStyle = pt.Style
-                curveStyle = mBspline.Style
-                curveStyle.LinearColor = pointStyle.LinearColor
-                ReleaseRCW(pt)
-                ReleaseRCW(pointStyle)
-                ReleaseRCW(curveStyle)
-            End If
+                    curveStyle = mBspline.Style
+                    curveStyle.LinearColor = pointStyle.LinearColor
+                    curveStyle.Width = 0.13
+                    'curveStyle.LinearName = "Continuous"
+                    ReleaseRCW(pt)
+                    ReleaseRCW(pointStyle)
+                    ReleaseRCW(curveStyle)
+                End If
         Next
 
     End Sub
+
+    Private Function Distance2D(x1 As Double, y1 As Double, x2 As Double, y2 As Double) As Double
+        Dim xa As Double = (x2 - x1) ^ 2
+        Dim ya As Double = (y2 - y1) ^ 2
+        Return Math.Sqrt(xa + ya)
+    End Function
 
     Public Sub SetVarValFromString(ByVal stringValue As String)
         Try
