@@ -204,7 +204,6 @@ Public Class PathProcessor
                     'We will try to make a curve but sometimes it fails.
                     'so we catch And dump the raw points to a file below.
                     mBspline = mBsplines.AddByPoints(4, ct, pointTrace.PathPoints.ToArray())
-                    mBspline.IsTangentiallyClosedCurve = False
                     pointStyle = pt.Style
                     curveStyle = mBspline.Style
                     curveStyle.LinearColor = pointStyle.LinearColor
