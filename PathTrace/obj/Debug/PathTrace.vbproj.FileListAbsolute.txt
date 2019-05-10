@@ -1,0 +1,15 @@
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\bin\Debug\PathTraceforSolidEdge.exe.config
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\bin\Debug\PathTraceforSolidEdge.exe
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\bin\Debug\PathTraceforSolidEdge.pdb
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\bin\Debug\PathTraceforSolidEdge.xml
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\bin\Debug\Interop.SolidEdge.dll
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\bin\Debug\Interop.SolidEdge.xml
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\obj\Debug\PathTrace.vbprojAssemblyReference.cache
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\obj\Debug\PathTrace.frmPathTrace.resources
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\obj\Debug\PathTrace.Resources.resources
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\obj\Debug\PathTrace.vbproj.GenerateResource.cache
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\obj\Debug\PathTrace.vbproj.CoreCompileInputs.cache
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\obj\Debug\PathTrace.vbproj.CopyComplete
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\obj\Debug\PathTraceforSolidEdge.exe
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\obj\Debug\PathTraceforSolidEdge.xml
+C:\Users\Jason\Documents\GitHub\PathTracerForSolidEdge\PathTrace\obj\Debug\PathTraceforSolidEdge.pdb

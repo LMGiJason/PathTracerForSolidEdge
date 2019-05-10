@@ -40,6 +40,7 @@ Public Class PathProcessor
     Private mUnitType As SolidEdgeFramework.UnitTypeConstants
     Private mPathPointLists As New List(Of PathPointList)
     Private mCommand As Command = Nothing
+    Private mMinDist As Double
 
     Public Event OnMsg(sender As Object, e As MsgEventArg)
     Public Event OnVarOrDim(sender As Object, e As MsgEventArg)
@@ -92,6 +93,11 @@ Public Class PathProcessor
         End Try
         Return True
     End Function
+    Public ReadOnly Property FileName As String
+        Get
+            Return mDraftDoc.FullName
+        End Get
+    End Property
 
     Private mInitialValue As Double
     Public ReadOnly Property InitialValue() As Double
@@ -100,7 +106,7 @@ Public Class PathProcessor
         End Get
     End Property
 
-    Public Function CreateTrace(incStr As String, maxStr As String) As Boolean
+    Public Function CreateTrace(incStr As String, maxStr As String, minDistBetween As String) As Boolean
         Dim inc As Double
         Dim max As Double
         Dim start As Double
@@ -115,6 +121,7 @@ Public Class PathProcessor
             mPoints = mSheet.Points2d
             inc = CDbl(mUOM.ParseUnit(mUnitType, incStr))
             max = CDbl(mUOM.ParseUnit(mUnitType, maxStr))
+            mMinDist = CDbl(mUOM.ParseUnit(mUnitType, minDistBetween))
             start = mVar.value
             cur = start
             If mPoints.Count = 0 Then
@@ -134,7 +141,7 @@ Public Class PathProcessor
 
             tmr.Start()
             Do
-                If tmr.ElapsedMilliseconds > 60000 Then '60 seconds max so the user won,t get mad
+                If tmr.ElapsedMilliseconds > 120000 Then 'seconds max so the user won,t get mad
                     ReportStatus("Too many iterations")
                     Return False
                 End If
@@ -152,9 +159,8 @@ Public Class PathProcessor
             Loop
             mVar.Value = max
 
-            'AddPathPoint()
             CreateCurves()
-            ReportStatus("Done")
+            'ReportStatus("Done")
             Return True
         Catch ex As Exception
             ReportStatus(ex.Message)
@@ -173,7 +179,7 @@ Public Class PathProcessor
             If tpc > 1 Then
                 'Only if the new point is not too close to the last point. Makes for a bad curve
                 Dim dist2D As Double = Distance2D(trace.PathPoints(tpc - 2), pt.x, trace.PathPoints(tpc - 1), pt.y)
-                If dist2D > 0.0001 Then
+                If dist2D >= mMinDist Then
                     trace.PathPoints.Add(pt.x)
                     trace.PathPoints.Add(pt.y)
                 End If
@@ -194,21 +200,40 @@ Public Class PathProcessor
             If pointTrace.PathPoints.Count > 2 Then
                 Dim pt As SolidEdgeFrameworkSupport.Point2d = mPoints.Item(r)
                 ct = CInt(pointTrace.PathPoints.Count / 2)
-                mBspline = mBsplines.AddByPoints(4, ct, pointTrace.PathPoints.ToArray())
-                'If Distance2D(pointTrace.PathPoints(0), pointTrace.PathPoints(1), pointTrace.PathPoints(ct * 2 - 2), pointTrace.PathPoints(ct * 2 - 1)) < 0.0001 Then
-                '    mBspline.IsTangentiallyClosedCurve = True
-                'End If
-                pointStyle = pt.Style
+                Try
+                    'We will try to make a curve but sometimes it fails.
+                    'so we catch And dump the raw points to a file below.
+                    mBspline = mBsplines.AddByPoints(4, ct, pointTrace.PathPoints.ToArray())
+                    mBspline.IsTangentiallyClosedCurve = False
+                    pointStyle = pt.Style
                     curveStyle = mBspline.Style
                     curveStyle.LinearColor = pointStyle.LinearColor
-                    curveStyle.Width = 0.13
-                    'curveStyle.LinearName = "Continuous"
-                    ReleaseRCW(pt)
-                    ReleaseRCW(pointStyle)
-                    ReleaseRCW(curveStyle)
-                End If
+                Catch
+                    MsgBox("Points list CSV was created in MyDocuments\PathTracerForSE", MsgBoxStyle.OkOnly, "Failed to create a curve.")
+                End Try
+
+                makeCSV(pt.Name, pointTrace.PathPoints)
+                ReleaseRCW(pt)
+                ReleaseRCW(pointStyle)
+                ReleaseRCW(curveStyle)
+            End If
         Next
 
+    End Sub
+
+    Private Sub makeCSV(name As String, vals As List(Of Double))
+        Dim myDocs As String = My.Computer.FileSystem.SpecialDirectories.MyDocuments
+        'Make a folder if needed and create files.
+        Dim outFldr As String = IO.Path.Combine(myDocs, "PathTracerForSE")
+        IO.Directory.CreateDirectory(outFldr)
+        Dim flName As String = IO.Path.Combine(outFldr, name & ".csv")
+        Using file As IO.StreamWriter = My.Computer.FileSystem.OpenTextFileWriter(flname, True)
+            For r As Integer = 0 To vals.Count - 1 Step 2
+                file.WriteLine(vals(r) & "," & vals(r + 1) & ",0.0")
+            Next
+            file.Close()
+            RaiseEvent OnMsg(Me, New MsgEventArg(flName))
+        End Using
     End Sub
 
     Private Function Distance2D(x1 As Double, y1 As Double, x2 As Double, y2 As Double) As Double

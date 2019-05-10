@@ -6,15 +6,22 @@ Public Class frmPathTrace
     Private mInitialValue As Double
 
     Private Sub frmPathTrace_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        My.Settings.LastVar = cboVarsOrDims.SelectedItem
         mProcessor.FinalCleanup()
     End Sub
 
     Private Sub frmPathTrace_Load(sender As Object, e As EventArgs) Handles Me.Load
         Me.cboVarsOrDims.Items.Clear()
         If mProcessor.InitEdge() Then
-            If Me.cboVarsOrDims.Items.Count > 0 Then
-                Me.cboVarsOrDims.SelectedIndex = 0
+            If cboVarsOrDims.Items.Count > 0 Then
+                If My.Settings.LastFile = mProcessor.FileName Then
+                    Dim idx = cboVarsOrDims.FindStringExact(My.Settings.LastVar)
+                    If idx >= 0 Then
+                        cboVarsOrDims.SelectedIndex = idx
+                    End If
+                End If
             End If
+            My.Settings.LastFile = mProcessor.FileName
         Else
             btnProcess.Enabled = False
         End If
@@ -25,7 +32,7 @@ Public Class frmPathTrace
     End Sub
 
     Private Sub mProcessor_OnVar(sender As Object, e As MsgEventArg) Handles mProcessor.OnVarOrDim
-        Me.cboVarsOrDims.Items.Add(e.Msg)
+        cboVarsOrDims.Items.Add(e.Msg)
     End Sub
 
     Private Sub cboVars_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboVarsOrDims.SelectedIndexChanged
@@ -34,13 +41,13 @@ Public Class frmPathTrace
         SetSliderRange()
     End Sub
 
-    Private Sub txtInputs_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtLimit.KeyPress, txtIncrement.KeyPress
+    Private Sub txtInputs_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtLimit.KeyPress, txtIncrement.KeyPress, txtMinDist.KeyPress
         If (Not e.KeyChar = ChrW(Keys.Back) And ("-0123456789.").IndexOf(e.KeyChar) = -1) Then
             e.Handled = True
         End If
     End Sub
 
-    Private Sub txtLimit_TextChanged(sender As Object, e As EventArgs) Handles txtLimit.TextChanged
+    Private Sub txtLimit_TextChanged(sender As Object, e As EventArgs) Handles txtLimit.TextChanged, txtMinDist.TextChanged
         SetSliderRange()
     End Sub
 
@@ -99,7 +106,7 @@ Public Class frmPathTrace
     End Sub
 
     Private Sub btnProcess_Click(sender As Object, e As EventArgs) Handles btnProcess.Click
-        If mProcessor.CreateTrace(txtIncrement.Text, txtLimit.Text) Then
+        If mProcessor.CreateTrace(txtIncrement.Text, txtLimit.Text, txtMinDist.Text) Then
             preciseTrackBar.SetToMax()
         End If
     End Sub

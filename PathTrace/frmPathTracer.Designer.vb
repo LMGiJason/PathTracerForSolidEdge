@@ -32,6 +32,8 @@ Partial Class frmPathTrace
         Me.cboVarsOrDims = New System.Windows.Forms.ComboBox()
         Me.txtLimit = New System.Windows.Forms.TextBox()
         Me.txtIncrement = New System.Windows.Forms.TextBox()
+        Me.txtMinDist = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
         Me.preciseTrackBar = New PathTrace.PreciseTrackBar()
         Me.statusStrip1.SuspendLayout()
         CType(Me.preciseTrackBar, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -39,10 +41,11 @@ Partial Class frmPathTrace
         '
         'statusStrip1
         '
+        Me.statusStrip1.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.statusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.lblStatus})
         Me.statusStrip1.Location = New System.Drawing.Point(0, 177)
         Me.statusStrip1.Name = "statusStrip1"
-        Me.statusStrip1.Size = New System.Drawing.Size(453, 25)
+        Me.statusStrip1.Size = New System.Drawing.Size(670, 25)
         Me.statusStrip1.SizingGrip = False
         Me.statusStrip1.TabIndex = 15
         Me.statusStrip1.Text = "statusStrip1"
@@ -55,9 +58,9 @@ Partial Class frmPathTrace
         '
         'btnProcess
         '
-        Me.btnProcess.Location = New System.Drawing.Point(342, 134)
+        Me.btnProcess.Location = New System.Drawing.Point(541, 134)
         Me.btnProcess.Name = "btnProcess"
-        Me.btnProcess.Size = New System.Drawing.Size(83, 29)
+        Me.btnProcess.Size = New System.Drawing.Size(116, 40)
         Me.btnProcess.TabIndex = 14
         Me.btnProcess.Text = "Process"
         Me.btnProcess.UseVisualStyleBackColor = True
@@ -65,7 +68,7 @@ Partial Class frmPathTrace
         'label3
         '
         Me.label3.AutoSize = True
-        Me.label3.Location = New System.Drawing.Point(325, 10)
+        Me.label3.Location = New System.Drawing.Point(393, 11)
         Me.label3.Name = "label3"
         Me.label3.Size = New System.Drawing.Size(37, 17)
         Me.label3.TabIndex = 13
@@ -74,7 +77,7 @@ Partial Class frmPathTrace
         'label2
         '
         Me.label2.AutoSize = True
-        Me.label2.Location = New System.Drawing.Point(216, 10)
+        Me.label2.Location = New System.Drawing.Point(284, 11)
         Me.label2.Name = "label2"
         Me.label2.Size = New System.Drawing.Size(70, 17)
         Me.label2.TabIndex = 12
@@ -95,13 +98,13 @@ Partial Class frmPathTrace
         Me.cboVarsOrDims.FormattingEnabled = True
         Me.cboVarsOrDims.Location = New System.Drawing.Point(12, 32)
         Me.cboVarsOrDims.Name = "cboVarsOrDims"
-        Me.cboVarsOrDims.Size = New System.Drawing.Size(167, 24)
+        Me.cboVarsOrDims.Size = New System.Drawing.Size(215, 24)
         Me.cboVarsOrDims.TabIndex = 8
         '
         'txtLimit
         '
         Me.txtLimit.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.PathTrace.My.MySettings.Default, "Limit", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-        Me.txtLimit.Location = New System.Drawing.Point(325, 33)
+        Me.txtLimit.Location = New System.Drawing.Point(393, 34)
         Me.txtLimit.Name = "txtLimit"
         Me.txtLimit.Size = New System.Drawing.Size(100, 22)
         Me.txtLimit.TabIndex = 10
@@ -110,11 +113,29 @@ Partial Class frmPathTrace
         'txtIncrement
         '
         Me.txtIncrement.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.PathTrace.My.MySettings.Default, "Increment", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-        Me.txtIncrement.Location = New System.Drawing.Point(219, 33)
+        Me.txtIncrement.Location = New System.Drawing.Point(287, 34)
         Me.txtIncrement.Name = "txtIncrement"
         Me.txtIncrement.Size = New System.Drawing.Size(100, 22)
         Me.txtIncrement.TabIndex = 9
         Me.txtIncrement.Text = Global.PathTrace.My.MySettings.Default.Increment
+        '
+        'txtMinDist
+        '
+        Me.txtMinDist.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.PathTrace.My.MySettings.Default, "PointDistribution", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+        Me.txtMinDist.Location = New System.Drawing.Point(502, 34)
+        Me.txtMinDist.Name = "txtMinDist"
+        Me.txtMinDist.Size = New System.Drawing.Size(100, 22)
+        Me.txtMinDist.TabIndex = 10
+        Me.txtMinDist.Text = Global.PathTrace.My.MySettings.Default.PointDistribution
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(499, 11)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(158, 17)
+        Me.Label4.TabIndex = 13
+        Me.Label4.Text = "Min dist between poiints"
         '
         'preciseTrackBar
         '
@@ -122,7 +143,7 @@ Partial Class frmPathTrace
         Me.preciseTrackBar.Location = New System.Drawing.Point(11, 72)
         Me.preciseTrackBar.Maximum = 100
         Me.preciseTrackBar.Name = "preciseTrackBar"
-        Me.preciseTrackBar.Size = New System.Drawing.Size(414, 56)
+        Me.preciseTrackBar.Size = New System.Drawing.Size(646, 56)
         Me.preciseTrackBar.TabIndex = 17
         Me.preciseTrackBar.TickFrequency = 10
         '
@@ -130,13 +151,15 @@ Partial Class frmPathTrace
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(453, 202)
+        Me.ClientSize = New System.Drawing.Size(670, 202)
         Me.Controls.Add(Me.preciseTrackBar)
         Me.Controls.Add(Me.statusStrip1)
         Me.Controls.Add(Me.btnProcess)
+        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.label3)
         Me.Controls.Add(Me.label2)
         Me.Controls.Add(Me.label1)
+        Me.Controls.Add(Me.txtMinDist)
         Me.Controls.Add(Me.txtLimit)
         Me.Controls.Add(Me.txtIncrement)
         Me.Controls.Add(Me.cboVarsOrDims)
@@ -165,5 +188,6 @@ Partial Class frmPathTrace
     Private WithEvents txtIncrement As System.Windows.Forms.TextBox
     Private WithEvents cboVarsOrDims As System.Windows.Forms.ComboBox
     Friend WithEvents preciseTrackBar As PreciseTrackBar
-
+    Private WithEvents txtMinDist As TextBox
+    Private WithEvents Label4 As Label
 End Class
